@@ -30,11 +30,6 @@ const routes = [
     component: () => import('../views/ProductDetails.vue'),
   },
   {
-    path: '/product/:id',
-    name: 'product',
-    component: () => import('../views/ProductDetails.vue'),
-  },
-  {
     path: '/create',
     name: 'create',
     component: () => import('../views/FormView.vue'),
@@ -46,13 +41,10 @@ const routes = [
     component: () => import('../views/EditView.vue'),
     meta: { requiresAuth: true },
   },
-  {
-    path: '/:pathMatch(.*)*',
-    component: PageNotFound,
-  },
   { path: '/404', component: PageNotFound },
   { path: '*', redirect: '/404' },
 ]
+
 
 const router = new VueRouter({
   mode: 'hash',
