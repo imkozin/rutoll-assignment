@@ -4,6 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import AuthView from '@/views/AuthView.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
+import EditView from '@/views/EditView.vue'
 
 Vue.use(VueRouter)
 
@@ -27,15 +28,27 @@ const routes = [
     path: '/product/:id',
     name: 'product',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/ProductDetails.vue'),
-    meta: { requiresAuth: true },
+      import('../views/ProductDetails.vue'),
+  },
+  {
+    path: '/product/:id',
+    name: 'product',
+    component: () =>
+      import('../views/ProductDetails.vue'),
   },
   {
     path: '/create',
     name: 'create',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/FormView.vue'),
+      import('../views/FormView.vue'),
     meta: { requiresAuth: true },
+  },
+  {
+    path: '/edit/:id',
+    name: 'edit',
+    component: () =>
+      import('../views/EditView.vue'),
+    // meta: { requiresAuth: true },
   },
   {
     path: '/:pathMatch(.*)*',
@@ -51,8 +64,8 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
-    const token = JSON.parse(sessionStorage.getItem('token'))
-    if (token) {
+    const authData = JSON.parse(sessionStorage.getItem('authData'))
+    if (authData) {
       next()
     } else {
       next('/login')

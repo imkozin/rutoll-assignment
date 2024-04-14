@@ -1,48 +1,49 @@
 <template>
   <div class="container mt-5">
-        <form @submit.prevent="submitLogin" class="custom-form">
-          <div class="text-center">
-            <h1>Login</h1>
-          </div>
-          <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <input
-              type="email"
-              class="form-control"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
-              placeholder="Enter email"
-              v-model="form.email"
-            />
-          </div>
-          <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input
-              type="password"
-              class="form-control"
-              id="exampleInputPassword1"
-              placeholder="Password"
-              v-model="form.password"
-            />
-          </div>
-          <div class="form-group form-check">
-            <small id="emailHelp" class="form-text text-muted"
-              >Not a member?
-              <router-link to="/auth" class="text-primary"
-                >Sign up here</router-link
-              ></small
-            >
-          </div>
-          <div class="text-center">
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-        </form>
+    <form @submit.prevent="submitLogin" class="custom-form">
+      <div class="text-center">
+        <h1>Login</h1>
+      </div>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input
+          type="email"
+          class="form-control"
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+          placeholder="Enter email"
+          v-model="form.email"
+        />
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="exampleInputPassword1"
+          placeholder="Password"
+          v-model="form.password"
+        />
+      </div>
+      <div class="form-group form-check">
+        <small id="emailHelp" class="form-text text-muted"
+          >Not a member?
+          <router-link to="/auth" class="text-primary"
+            >Sign up here</router-link
+          ></small
+        >
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
   </div>
 </template>
 
 <script>
-// import { authMixin } from '@/mixins/authMixin'
-// import { toastMixin } from '@/mixins/toastMixin'
+import { authMixin } from '@/mixins/authMixin'
+import { toastMixin } from '@/mixins/toastMixin'
+import * as bulmaToast from 'bulma-toast'
 import axios from 'axios'
 
 export default {
@@ -57,7 +58,7 @@ export default {
   mounted() {
     document.title = 'Sign In'
   },
-  // mixins: [authMixin, toastMixin],
+  mixins: [authMixin, toastMixin],
   methods: {
     async submitLogin() {
       try {
@@ -65,23 +66,37 @@ export default {
           'http://localhost:8000/api/login',
           this.form
         )
+        console.log('resp', response)
         if (response.status === 200) {
-          const { access_token } = response.data
+          const { access_token, email } = response.data
           sessionStorage.setItem(
-            'token',
-            JSON.stringify({
-              token: access_token,
-            })
+            'authData',
+            JSON.stringify({ token: access_token, email })
           )
           this.$router.push('/')
-          // location.reload()
+          location.reload()
         } else {
-          this.authError('danger', 'An error occurred')
+          bulmaToast({
+            message: 'An error occurred',
+            type: 'is-danger',
+            dismissible: true,
+            pauseOnHover: true,
+            animate: { in: 'fadeIn', out: 'fadeOut' },
+          })
+          // this.authError('danger', 'An error occurred')
         }
       } catch (err) {
         console.error(err)
         const { data } = err.response
-        this.authError('danger', data.error)
+        // this.authError('danger', data.error)
+        toast({
+          message: data.error,
+          type: 'is-success',
+          dismissible: true,
+          pauseOnHover: true,
+          position: 'bottom-right',
+          animate: { in: 'fadeIn', out: 'fadeOut' },
+        })
       }
     },
   },

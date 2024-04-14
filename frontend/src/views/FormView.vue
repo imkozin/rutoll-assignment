@@ -51,6 +51,7 @@ export default {
                     'Content-Type': 'application/json',
                 }
             });
+            this.$router.push('/')
         } catch (error) {
             const { data } = error.response;
             this.errorMessage('danger', data.error)

@@ -12,7 +12,7 @@ export const toastMixin = {
       this.$bvToast.toast(error, {
         title: `Authentication Error`,
         variant: variant,
-        autoHideDelay: 3000,
+        autoHideDelay: 5000,
         solid: true,
       })
     },

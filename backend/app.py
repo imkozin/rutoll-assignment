@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 from flask_migrate import Migrate
@@ -110,7 +110,6 @@ def get_products():
 
 @app.route('/api/add-product', methods=['POST'])
 def add_product():
-    # current_user = get_jwt_identity()
     data = request.get_json()
     name = data.get('name')
     description = data.get('description')
@@ -163,8 +162,10 @@ def edit_product(id):
     
 
 @app.route('/api/delete-product/<int:id>', methods=['DELETE'])
+# @jwt_required()
 def delete_product(id):
     # current_user = get_jwt_identity()
+    # print(current_user)
     product = Product.query.get(id)
 
     if product is not None:
@@ -172,7 +173,7 @@ def delete_product(id):
         db.session.commit()
         return jsonify({"message": "Product deleted successfully!"}), 200
     else:
-        return jsonify({"message": "Product not found"}), 404
+        return jsonify({"message": "Product not found or unauthorized"}), 404
     
 
 @app.route('/api/get-product/<int:id>', methods=['GET'])

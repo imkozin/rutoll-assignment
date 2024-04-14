@@ -5,13 +5,17 @@
         <h5>$ {{ product.price }}</h5>
         <h6>Published data: {{ product.created }}</h6>
 
-        <button class="btn btn-danger mx-3 mt-3" @click="deleteUser">Delete</button>
+        <div class="mt-3" v-if="isAuthenticated">
+          <button class="btn btn-danger mx-3" @click="deleteProduct">Delete</button>
+          <router-link class="btn btn-success" :to="{name: 'edit', params: {id: product.id}}">Update</router-link>
+        </div>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
 import {toastMixin} from '@/mixins/toastMixin'
+import { authMixin } from '@/mixins/authMixin'
 
 export default {
   data() {
@@ -19,7 +23,7 @@ export default {
       product: {}
     }
   },
-  mixins: [toastMixin],
+  mixins: [toastMixin, authMixin],
   mounted() {
     document.title = 'Product Details'
     this.getProduct()
@@ -28,22 +32,21 @@ export default {
     async getProduct() {
       try {
         const response = await axios.get(`http://localhost:8000/api/get-product/${this.$route.params.id}`)
-        console.log(response);
         this.product = response.data.product
       } catch (error) {
         console.error('Error fetching product:', error)
       }
     },
-    async deleteUser() {
+    async deleteProduct() {
         try {
             const res = await axios.delete(`http://localhost:8000/api/delete-product/${this.$route.params.id}`);
+            this.successMessage('success', res.data.message)
             this.$router.push({
               name: 'home'
             })
-            this.successMessage('success', res.data.message)
-            console.log('User deleted successfully');
+            console.log('Product deleted successfully');
         } catch (err) {
-            console.error('Error deleting user:', err.message);
+            console.error('Error deleting product:', err.message);
         }
     },
   }
