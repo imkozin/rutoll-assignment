@@ -46,7 +46,7 @@ export default {
   mixins: [toastMixin],
   async created() {
     try {
-      const response = await axios.get(`http://localhost:8000/api/get-product/${this.$route.params.id}`);
+      const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/get-product/${this.$route.params.id}`);
       const productData = response.data.product;
       this.newProduct = {
         name: productData.name,
@@ -61,7 +61,7 @@ export default {
     async editProduct() {
       try {
         const response = await axios.put(
-          `http://localhost:8000/api/edit-product/${this.$route.params.id}`,
+          `${process.env.VUE_APP_API_URL}/api/edit-product/${this.$route.params.id}`,
           this.newProduct
         )
         console.log(response);

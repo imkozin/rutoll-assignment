@@ -56,15 +56,13 @@ export default {
   },
   mounted() {
     document.title = 'Sign In'
+    console.log(process.env.NODE_ENV);
   },
   mixins: [authMixin, toastMixin],
   methods: {
     async submitLogin() {
       try {
-        const response = await axios.post(
-          'http://localhost:8000/api/login',
-          this.form
-        )
+        const response = await axios.post(process.env.VUE_APP_API_URL + '/api/login', this.form)
         console.log('resp', response)
         if (response.status === 200) {
           const { access_token, email } = response.data

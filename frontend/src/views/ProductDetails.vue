@@ -36,7 +36,7 @@ export default {
     async getProduct() {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/get-product/${this.$route.params.id}`
+          `${process.env.VUE_APP_API_URL}/api/get-product/${this.$route.params.id}`
         )
         this.product = response.data.product
       } catch (error) {
@@ -47,7 +47,7 @@ export default {
     async deleteProduct() {
       try {
         const res = await axios.delete(
-          `http://localhost:8000/api/delete-product/${this.$route.params.id}`
+          `${process.env.VUE_APP_API_URL}/api/delete-product/${this.$route.params.id}`
         )
         this.successMessage('success', res.data.message)
         this.$router.push({

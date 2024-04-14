@@ -46,7 +46,7 @@ export default {
   methods: {
     async addProduct() {
       try {
-            const response = await axios.post('http://localhost:8000/api/add-product', this.newProduct, {
+            const response = await axios.post(process.env.VUE_APP_API_URL + '/api/add-product', this.newProduct, {
                 headers: {
                     'Content-Type': 'application/json',
                 }

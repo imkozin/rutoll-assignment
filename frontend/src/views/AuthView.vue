@@ -61,7 +61,7 @@ export default {
   methods: {
     async submitReg() {
       try {
-            const response = await axios.post('http://localhost:8000/api/register', this.form, {
+            const response = await axios.post(process.env.VUE_APP_API_URL + '/api/register', this.form, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
