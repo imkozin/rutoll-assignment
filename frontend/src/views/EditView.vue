@@ -32,6 +32,7 @@
 <script>
 import axios from 'axios'
 import {toastMixin} from '@/mixins/toastMixin'
+import Cookies from 'js-cookie';
 
 export default {
   data() {
@@ -60,17 +61,28 @@ export default {
   methods: {
     async editProduct() {
       try {
-        const response = await axios.put(
-          `${process.env.VUE_APP_API_URL}/api/edit-product/${this.$route.params.id}`,
-          this.newProduct
-        )
-        console.log(response);
-        //   this.newProduct = {}
-        this.$router.push(`/product/${this.$route.params.id}`)
+        const authData = JSON.parse(sessionStorage.getItem('authData'))
+        const token = authData.token
+
+        try {
+          const response = await axios.put(
+            `${process.env.VUE_APP_API_URL}/api/edit-product/${this.$route.params.id}`,
+            this.newProduct,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+              },
+            }
+          )
+          console.log(response);
+          Cookies.set('productEdited', 'true');
+          this.$router.push(`/product/${this.$route.params.id}`)
+        } catch (err) {
+          this.errorMessage('danger', err.response.data.error)
+        }
       } catch (error) {
-        console.log('e', error);
-        const { data } = error.response
-        this.errorMessage('danger', data.error)
+        this.errorMessage('danger', error.message)
         console.error('Error updating product:', error)
       }
     },

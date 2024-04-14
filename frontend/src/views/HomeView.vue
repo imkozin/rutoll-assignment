@@ -62,6 +62,7 @@
 
 <script>
 import axios from 'axios'
+import { toastMixin } from '@/mixins/toastMixin'
 
 export default {
   data() {
@@ -73,6 +74,7 @@ export default {
       pageSize: 10,
     }
   },
+  mixins: [toastMixin],
   created() {
     const authData = JSON.parse(sessionStorage.getItem('authData'))
     const email = authData.email
@@ -106,6 +108,7 @@ export default {
         const response = await axios.get(process.env.VUE_APP_API_URL + '/api/products')
         this.products = response.data.products
       } catch (error) {
+        this.errorMessage('danger', error.message)
         console.error('Error fetching products:', error)
       }
     },

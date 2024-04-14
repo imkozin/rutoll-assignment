@@ -56,29 +56,34 @@ export default {
   },
   mounted() {
     document.title = 'Sign In'
-    console.log(process.env.NODE_ENV);
+    console.log(process.env.NODE_ENV)
   },
   mixins: [authMixin, toastMixin],
   methods: {
     async submitLogin() {
       try {
-        const response = await axios.post(process.env.VUE_APP_API_URL + '/api/login', this.form)
-        console.log('resp', response)
-        if (response.status === 200) {
-          const { access_token, email } = response.data
-          sessionStorage.setItem(
-            'authData',
-            JSON.stringify({ token: access_token, email })
-          )
-          this.$router.push('/')
-          location.reload()
-        } else {
-          this.authError('danger', 'An error occurred')
+        const response = await axios.post(
+          process.env.VUE_APP_API_URL + '/api/login',
+          this.form
+        )
+        try {
+          if (response.status === 200) {
+            const { access_token, email } = response.data
+            sessionStorage.setItem(
+              'authData',
+              JSON.stringify({ token: access_token, email })
+            )
+            this.$router.push('/')
+            location.reload()
+          } else {
+            this.authError('danger', response.data.error)
+          }
+        } catch (err) {
+          console.log('err1', err)
+          this.authError('danger', err)
         }
       } catch (err) {
-        console.error(err)
-        const { data } = err.response
-        this.authError('danger', data.error)
+        this.authError('danger', err.response.data.error)
       }
     },
   },

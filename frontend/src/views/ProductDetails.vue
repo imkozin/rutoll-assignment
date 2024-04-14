@@ -35,6 +35,9 @@ export default {
   methods: {
     async getProduct() {
       try {
+        // const authData = JSON.parse(sessionStorage.getItem('authData'))
+        // const token = authData.token
+
         const response = await axios.get(
           `${process.env.VUE_APP_API_URL}/api/get-product/${this.$route.params.id}`
         )
@@ -46,15 +49,26 @@ export default {
     },
     async deleteProduct() {
       try {
-        const res = await axios.delete(
-          `${process.env.VUE_APP_API_URL}/api/delete-product/${this.$route.params.id}`
-        )
-        this.successMessage('success', res.data.message)
-        this.$router.push({
-          name: 'home',
-        })
-        console.log('Product deleted successfully')
+        const authData = JSON.parse(sessionStorage.getItem('authData'))
+        const token = authData.token
+        
+        try {
+          const response = await axios.delete(
+            `${process.env.VUE_APP_API_URL}/api/delete-product/${this.$route.params.id}`,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          this.$router.push('/')
+        } catch (err) {
+          console.log('err', err);
+          this.errorMessage('danger', err.response.data.error)
+        }
       } catch (err) {
+        this.errorMessage('danger', err.message)
         console.error('Error deleting product:', err.message)
       }
     },

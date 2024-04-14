@@ -17,7 +17,7 @@
         ></textarea
         ><br />
 
-        <input type="number" class="form-control" v-model="newProduct.price"/>
+        <input type="number" class="form-control" v-model="newProduct.price" />
 
         <button class="btn btn-success mt-4">Add Product</button>
       </form>
@@ -27,7 +27,7 @@
 
 <script>
 import axios from 'axios'
-import {toastMixin} from '@/mixins/toastMixin'
+import { toastMixin } from '@/mixins/toastMixin'
 
 export default {
   data() {
@@ -35,8 +35,8 @@ export default {
       newProduct: {
         name: '',
         description: '',
-        price: 0
-      }
+        price: 0,
+      },
     }
   },
   mixins: [toastMixin],
@@ -46,17 +46,28 @@ export default {
   methods: {
     async addProduct() {
       try {
-            const response = await axios.post(process.env.VUE_APP_API_URL + '/api/add-product', this.newProduct, {
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-            this.$router.push('/')
-        } catch (error) {
-            const { data } = error.response;
-            this.errorMessage('danger', data.error)
-            console.error('Error creating product:', error);
+        const authData = JSON.parse(sessionStorage.getItem('authData'))
+        const token = authData.token
+
+        try {
+          const response = await axios.post(
+            process.env.VUE_APP_API_URL + '/api/add-product',
+            this.newProduct,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          this.$router.push('/')
+        } catch (err) {
+          this.errorMessage('danger', err.response.data.error)
         }
+      } catch (error) {
+        this.errorMessage('danger', error.message)
+        console.error('Error creating product:', error)
+      }
     },
   },
 }

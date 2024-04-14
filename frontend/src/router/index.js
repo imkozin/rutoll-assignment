@@ -38,7 +38,7 @@ const routes = [
     path: '/create',
     name: 'create',
     component: () => import('../views/FormView.vue'),
-    meta: { requiresAuth: true },
+    // meta: { requiresAuth: true },
   },
   {
     path: '/edit/:id',

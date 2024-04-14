@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -69,6 +69,7 @@ def register():
     new_user = User(email=data['email'], password=hashed_password)
     db.session.add(new_user)
     db.session.commit()
+    
     return jsonify({"message": "User registered successfully"}), 200
 
 @app.route('/api/login', methods=['POST'])
@@ -88,7 +89,12 @@ def login():
         return jsonify({'error': 'Invalid email or password'}), 401
 
     access_token = create_access_token(identity=user.email)
-    return jsonify({'access_token': access_token, 'email': email}), 200
+    
+    response = make_response(jsonify({'message': 'Login successful', 'access_token': access_token, 'email': email}), 200)
+
+    response.set_cookie('access_token', access_token)
+
+    return response
 
 @app.route('/api/products', methods=['GET'])
 def get_products():
@@ -109,11 +115,16 @@ def get_products():
     return jsonify({'products': product_list})
 
 @app.route('/api/add-product', methods=['POST'])
+@jwt_required()
 def add_product():
+    current_user = get_jwt_identity()
+
     data = request.get_json()
+
     name = data.get('name')
     description = data.get('description')
     price = data.get('price')
+
 
     if not name or not description:
         return jsonify({'error': 'All fields are required'}), 400
@@ -139,8 +150,9 @@ def add_product():
 
 
 @app.route('/api/edit-product/<int:id>', methods=['PUT'])
+@jwt_required()
 def edit_product(id):
-    # current_user = get_jwt_identity()
+    current_user = get_jwt_identity()
     product = Product.query.get(id)
     
     if product:
@@ -174,10 +186,10 @@ def edit_product(id):
     
 
 @app.route('/api/delete-product/<int:id>', methods=['DELETE'])
-# @jwt_required()
+@jwt_required()
 def delete_product(id):
-    # current_user = get_jwt_identity()
-    # print(current_user)
+    current_user = get_jwt_identity()
+    
     product = Product.query.get(id)
 
     if product is not None:
@@ -190,7 +202,6 @@ def delete_product(id):
 
 @app.route('/api/get-product/<int:id>', methods=['GET'])
 def get_product_data(id):
-    # current_user = get_jwt_identity()
     product = Product.query.get(id)
 
     if product is not None:

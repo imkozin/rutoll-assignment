@@ -68,9 +68,8 @@ export default {
             });
             this.$router.push('/login');
         } catch (error) {
-            const { data } = error.response;
-            this.errorMessage('danger', data.error)
-            console.error('Error creating user:', error);
+            this.errorMessage('danger', error.response.data.error)
+            // console.error('Error creating user:', error);
         }
     },
   },
