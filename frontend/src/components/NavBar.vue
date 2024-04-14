@@ -64,7 +64,7 @@ export default {
   methods: {
     logout() {
       sessionStorage.removeItem('authData')
-      this.$router.push('/login')
+      this.$router.push('/')
       location.reload()
     },
   },

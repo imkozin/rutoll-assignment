@@ -63,7 +63,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
     const authData = JSON.parse(sessionStorage.getItem('authData'))
-    if (authData) {
+    if (authData.token) {
       next()
     } else {
       next('/login')
