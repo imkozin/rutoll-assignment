@@ -44,7 +44,7 @@ const routes = [
     path: '/edit/:id',
     name: 'edit',
     component: () => import('../views/EditView.vue'),
-    // meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: '/:pathMatch(.*)*',
