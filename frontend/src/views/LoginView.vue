@@ -43,7 +43,6 @@
 <script>
 import { authMixin } from '@/mixins/authMixin'
 import { toastMixin } from '@/mixins/toastMixin'
-import * as bulmaToast from 'bulma-toast'
 import axios from 'axios'
 
 export default {
@@ -76,27 +75,12 @@ export default {
           this.$router.push('/')
           location.reload()
         } else {
-          bulmaToast({
-            message: 'An error occurred',
-            type: 'is-danger',
-            dismissible: true,
-            pauseOnHover: true,
-            animate: { in: 'fadeIn', out: 'fadeOut' },
-          })
-          // this.authError('danger', 'An error occurred')
+          this.authError('danger', 'An error occurred')
         }
       } catch (err) {
         console.error(err)
         const { data } = err.response
-        // this.authError('danger', data.error)
-        toast({
-          message: data.error,
-          type: 'is-success',
-          dismissible: true,
-          pauseOnHover: true,
-          position: 'bottom-right',
-          animate: { in: 'fadeIn', out: 'fadeOut' },
-        })
+        this.authError('danger', data.error)
       }
     },
   },

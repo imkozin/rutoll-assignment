@@ -1,29 +1,62 @@
 <template>
   <div class="container mt-5">
-    <h2 v-if="email" class="text-center mb-2">Welcome! You are logged in as {{ email }}</h2>
-    <table class="table table-striped table-hover mt-2">
+    <h2 v-if="email" class="text-center mb-2">
+      Welcome! You are logged in as {{ email }}
+    </h2>
+    <div class="input-group">
+      <input
+        type="search"
+        class="form-control rounded"
+        placeholder="Search by product name"
+        aria-label="Search"
+        aria-describedby="search-addon"
+        v-model="searchItem"
+      />
+    </div>
+
+    <table class="table table-striped table-bordered table-hover mt-2">
       <thead>
-        <tr>
+        <tr class="text-center">
           <th scope="col">#</th>
           <th scope="col">Product Name</th>
           <th scope="col">Description</th>
           <th scope="col">Price</th>
+          <th scope="col">More</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(product, indx) in products" :key="product.id">
-          <th scope="row">{{ indx + 1 }}</th>
+        <tr
+          v-for="(product, indx) in paginatedProducts"
+          :key="product.id"
+          class="text-center"
+        >
+          <th scope="row">{{ (currentPage - 1) * pageSize + indx + 1 }}</th>
           <td>{{ product.name }}</td>
           <td>{{ truncateDescription(product.description) }}</td>
           <td>$ {{ product.price }}</td>
           <RouterLink
             :to="{ name: 'product', params: { id: product.id } }"
-            class="btn btn-secondary"
-            >Details</RouterLink
+            class="btn btn-secondary d-flex justify-content-center"
           >
+            Details
+          </RouterLink>
         </tr>
       </tbody>
     </table>
+
+    <div>
+      <ul class="pagination justify-content-center">
+        <li class="page-item" :class="{ disabled: currentPage === 1 }">
+          <button class="page-link" @click="prevPage">&laquo;</button>
+        </li>
+        <li class="page-item" v-for="page in totalPages" :key="page">
+          <button class="page-link" @click="goToPage(page)">{{ page }}</button>
+        </li>
+        <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+          <button class="page-link" @click="nextPage">&raquo;</button>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -35,6 +68,9 @@ export default {
     return {
       products: [],
       email: '',
+      searchItem: '',
+      currentPage: 1,
+      pageSize: 10,
     }
   },
   created() {
@@ -43,6 +79,26 @@ export default {
     if (email) {
       this.email = email
     }
+  },
+  computed: {
+    filteredProducts() {
+      if (!this.searchItem) {
+        return this.products
+      } else {
+        const search = this.searchItem.toLowerCase()
+        return this.products.filter((item) =>
+          item.name.toLowerCase().includes(search)
+        )
+      }
+    },
+    paginatedProducts() {
+      const startIndex = (this.currentPage - 1) * this.pageSize
+      const endIndex = startIndex + this.pageSize
+      return this.filteredProducts.slice(startIndex, endIndex)
+    },
+    totalPages() {
+      return Math.ceil(this.filteredProducts.length / this.pageSize)
+    },
   },
   methods: {
     async getProducts() {
@@ -54,13 +110,26 @@ export default {
       }
     },
     truncateDescription(description) {
-      const maxLength = 50;
+      const maxLength = 50
       if (description.length > maxLength) {
-        return description.slice(0, maxLength) + '...';
+        return description.slice(0, maxLength) + '...'
       } else {
-        return description;
+        return description
       }
-    }
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++
+      }
+    },
+    goToPage(page) {
+      this.currentPage = page
+    },
   },
   mounted() {
     document.title = 'Home'

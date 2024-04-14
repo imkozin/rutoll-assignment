@@ -42,8 +42,8 @@
 
 <script>
 import axios from 'axios';
-// import { authMixin } from '@/mixins/authMixin';
-// import {toastMixin} from '@/mixins/toastMixin'
+import { authMixin } from '@/mixins/authMixin';
+import {toastMixin} from '@/mixins/toastMixin'
 
 export default {
   data() {
@@ -54,7 +54,7 @@ export default {
       },
     }
   },
-  // mixins: [authMixin, toastMixin],
+  mixins: [authMixin, toastMixin],
   mounted() {
     document.title = 'Sign Up'
   },

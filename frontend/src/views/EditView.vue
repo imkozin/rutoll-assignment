@@ -21,7 +21,6 @@
           type="number"
           class="form-control"
           v-model="newProduct.price"
-          min="0"
         />
 
         <button class="btn btn-warning mt-4">Edit Product</button>
@@ -32,6 +31,7 @@
 
 <script>
 import axios from 'axios'
+import {toastMixin} from '@/mixins/toastMixin'
 
 export default {
   data() {
@@ -43,6 +43,7 @@ export default {
       },
     }
   },
+  mixins: [toastMixin],
   async created() {
     try {
       const response = await axios.get(`http://localhost:8000/api/get-product/${this.$route.params.id}`);
@@ -65,9 +66,9 @@ export default {
         )
         console.log(response);
         //   this.newProduct = {}
-        //   this.successMessage('success', response.data.message)
         this.$router.push(`/product/${this.$route.params.id}`)
       } catch (error) {
+        console.log('e', error);
         const { data } = error.response
         this.errorMessage('danger', data.error)
         console.error('Error updating product:', error)

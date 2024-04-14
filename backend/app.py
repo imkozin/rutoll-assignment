@@ -115,12 +115,18 @@ def add_product():
     description = data.get('description')
     price = data.get('price')
 
-    if not name or not description or not price:
+    if not name or not description:
         return jsonify({'error': 'All fields are required'}), 400
+    
+    if int(price) > 99999 or int(price) < 0:
+        return jsonify({'error': 'Price must be a positive number lower than 99999'}), 400
+
+    if len(name) > 20:
+        return jsonify({'error': 'Product name can contain till 20 symbols'}), 400
 
     existing_product = Product.query.filter(func.lower(Product.name) == func.lower(name)).first()
     if existing_product:
-        return jsonify({'error': 'A product with a similar name already exists'}), 400
+        return jsonify({'error': 'A product with this name already exists'}), 400
 
     new_product = Product(name=name, description=description, price=price)
     db.session.add(new_product)
@@ -144,8 +150,14 @@ def edit_product(id):
             new_description = data.get('description', product.description)
             new_price = data.get('price', product.price)
 
-            # if new_name.lower() == product.name.lower():
-            #     return jsonify({'error': 'A product with a similar name already exists'}), 400
+            if not new_name or not new_description:
+                return jsonify({'error': 'All fields are required'}), 400
+            
+            if int(new_price) > 99999 or int(new_price) < 0:
+                return jsonify({'error': 'Price must be a positive number lower than 99999'}), 400
+
+            if len(new_name) > 20:
+                return jsonify({'error': 'Product name can contain till 20 symbols'}), 400
             
             product.name = new_name
             product.description = new_description
@@ -156,7 +168,7 @@ def edit_product(id):
             return jsonify({"message": "Product details updated successfully"}), 200
         except IntegrityError:
             db.session.rollback()
-            return jsonify({"error": "Failed to update product due to database integrity error"}), 500
+            return jsonify({"error": "Product with this name already exists"}), 500
     else:
         return jsonify({"message": "Product not found"}), 404
     

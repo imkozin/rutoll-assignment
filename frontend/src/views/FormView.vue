@@ -17,7 +17,7 @@
         ></textarea
         ><br />
 
-        <input type="number" class="form-control" v-model="newProduct.price" min="0" />
+        <input type="number" class="form-control" v-model="newProduct.price"/>
 
         <button class="btn btn-success mt-4">Add Product</button>
       </form>
@@ -55,7 +55,7 @@ export default {
         } catch (error) {
             const { data } = error.response;
             this.errorMessage('danger', data.error)
-            console.error('Error creating user:', error);
+            console.error('Error creating product:', error);
         }
     },
   },
