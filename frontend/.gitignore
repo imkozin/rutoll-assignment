@@ -2,6 +2,11 @@
 node_modules
 /dist
 
+/src/mixins
+/src/views/FormView.vue
+/src/views/ProductDetails.vue
+
+
 
 # local env files
 .env.local
