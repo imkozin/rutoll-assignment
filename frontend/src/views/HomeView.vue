@@ -112,7 +112,6 @@ export default {
           process.env.VUE_APP_API_URL + '/api/products',
           {
             headers: {
-              'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
           }

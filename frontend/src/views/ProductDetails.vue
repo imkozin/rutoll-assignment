@@ -41,7 +41,6 @@ export default {
         const response = await axios.get(
           `${process.env.VUE_APP_API_URL}/api/get-product/${this.$route.params.id}`, {
             headers: {
-              'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
           }
