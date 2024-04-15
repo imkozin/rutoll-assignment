@@ -35,11 +35,16 @@ export default {
   methods: {
     async getProduct() {
       try {
-        // const authData = JSON.parse(sessionStorage.getItem('authData'))
-        // const token = authData.token
+        const authData = JSON.parse(sessionStorage.getItem('authData'))
+        const token = authData.token
 
         const response = await axios.get(
-          `${process.env.VUE_APP_API_URL}/api/get-product/${this.$route.params.id}`
+          `${process.env.VUE_APP_API_URL}/api/get-product/${this.$route.params.id}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
         )
         this.product = response.data.product
       } catch (error) {
@@ -58,7 +63,7 @@ export default {
             {
               headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                'Authorization': `Bearer ${token}`,
               },
             }
           )
