@@ -21,8 +21,8 @@
         <li class="nav-item active">
           <router-link to="/" class="nav-link">Home</router-link>
         </li>
-        <li class="nav-item" v-if="isAuthenticated">
-          <router-link to="/create" class="nav-link">Create</router-link>
+        <li class="nav-item">
+          <router-link to="/create" class="nav-link" v-if="isAuthenticated">Create</router-link>
         </li>
       </ul>
       <div>
