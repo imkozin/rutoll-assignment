@@ -14,7 +14,8 @@
       />
     </div>
 
-    <table class="table table-striped table-bordered table-hover mt-2">
+    <div v-if="searchItem">
+      <table class="table table-striped table-bordered table-hover mt-2">
       <thead>
         <tr class="text-center">
           <th scope="col">#</th>
@@ -26,7 +27,7 @@
       </thead>
       <tbody>
         <tr
-          v-for="(product, indx) in paginatedProducts"
+          v-for="(product, indx) in filteredProducts"
           :key="product.id"
           class="text-center"
         >
@@ -34,29 +35,63 @@
           <td>{{ product.name }}</td>
           <td>{{ truncateDescription(product.description) }}</td>
           <td>$ {{ product.price }}</td>
-          <RouterLink
+          <router-link
             :to="{ name: 'product', params: { id: product.id } }"
             class="btn btn-secondary d-flex justify-content-center"
           >
             Details
-          </RouterLink>
+          </router-link>
         </tr>
       </tbody>
     </table>
-
-    <div>
-      <ul class="pagination justify-content-center">
-        <li class="page-item" :class="{ disabled: currentPage === 1 }">
-          <button class="page-link" @click="prevPage">&laquo;</button>
-        </li>
-        <li class="page-item" v-for="page in totalPages" :key="page">
-          <button class="page-link" @click="goToPage(page)">{{ page }}</button>
-        </li>
-        <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-          <button class="page-link" @click="nextPage">&raquo;</button>
-        </li>
-      </ul>
     </div>
+
+    <div v-else>
+      <table class="table table-striped table-bordered table-hover mt-2">
+        <thead>
+          <tr class="text-center">
+            <th scope="col">#</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Price</th>
+            <th scope="col">More</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(product, indx) in paginatedProducts"
+            :key="product.id"
+            class="text-center"
+          >
+            <th scope="row">{{ (currentPage - 1) * pageSize + indx + 1 }}</th>
+            <td>{{ product.name }}</td>
+            <td>{{ truncateDescription(product.description) }}</td>
+            <td>$ {{ product.price }}</td>
+            <router-link
+              :to="{ name: 'product', params: { id: product.id } }"
+              class="btn btn-secondary d-flex justify-content-center"
+            >
+              Details
+            </router-link>
+          </tr>
+        </tbody>
+      </table>
+  
+      <div>
+        <ul class="pagination justify-content-center">
+          <li class="page-item" :class="{ disabled: currentPage === 1 }">
+            <button class="page-link" @click="prevPage">&laquo;</button>
+          </li>
+          <li class="page-item" v-for="page in totalPages" :key="page">
+            <button class="page-link" @click="goToPage(page)">{{ page }}</button>
+          </li>
+          <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+            <button class="page-link" @click="nextPage">&raquo;</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
   </div>
 </template>
 
