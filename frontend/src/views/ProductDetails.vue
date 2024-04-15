@@ -35,8 +35,8 @@ export default {
   methods: {
     async getProduct() {
       try {
-        const authData = JSON.parse(sessionStorage.getItem('authData'))
-        const token = authData.token
+        // const authData = JSON.parse(sessionStorage.getItem('authData'))
+        // const token = authData.token
 
         const response = await axios.get(
           `${process.env.VUE_APP_API_URL}/api/get-product/${this.$route.params.id}`, {
