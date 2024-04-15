@@ -31,7 +31,7 @@
           :key="product.id"
           class="text-center"
         >
-          <th scope="row">{{ (currentPage - 1) * pageSize + indx + 1 }}</th>
+          <th scope="row">{{ indx + 1 }}</th>
           <td>{{ product.name }}</td>
           <td>{{ truncateDescription(product.description) }}</td>
           <td>$ {{ product.price }}</td>
