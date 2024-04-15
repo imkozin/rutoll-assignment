@@ -64,7 +64,12 @@ export default {
       try {
         const response = await axios.post(
           process.env.VUE_APP_API_URL + '/api/login',
-          this.form
+          this.form,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
         )
         try {
           if (response.status === 200) {
