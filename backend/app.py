@@ -1,5 +1,4 @@
 from flask import Flask, jsonify, request, make_response
-from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
@@ -9,12 +8,14 @@ from sqlalchemy.exc import IntegrityError
 from dotenv import load_dotenv
 import os
 import re
-import datetime
+from db import db, init_db
+from models import User, Product
 
 load_dotenv()
 
 app = Flask(__name__)
-# CORS(app)
+
+CORS(app)
 
 CORS(app, origins='https://imkozin.github.io', methods=['GET', 'POST', 'PUT', 'DELETE'], allow_headers=['Content-Type', "Authorization"])
 
@@ -22,7 +23,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['JWT_SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
 
-db = SQLAlchemy(app)
+init_db(app)
 
 @app.route('/test_db_connection')
 def test_db_connection():
@@ -32,21 +33,6 @@ def test_db_connection():
     except Exception as e:
         return f"Error: {str(e)}"
 
-
-migrate = Migrate(app, db)
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(1000), nullable=False)
-
-
-class Product(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True, nullable=False)
-    description = db.Column(db.String(1500), nullable=False)
-    price = db.Column(db.Integer)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
 
 jwt = JWTManager(app)
 
@@ -127,7 +113,7 @@ def add_product():
     price = data.get('price')
 
 
-    if not name or not description:
+    if not name or not description or not price:
         return jsonify({'error': 'All fields are required'}), 400
     
     if int(price) > 99999 or int(price) < 0:
@@ -163,7 +149,7 @@ def edit_product(id):
             new_description = data.get('description', product.description)
             new_price = data.get('price', product.price)
 
-            if not new_name or not new_description:
+            if not new_name or not new_description or not new_price:
                 return jsonify({'error': 'All fields are required'}), 400
             
             if int(new_price) > 99999 or int(new_price) < 0:

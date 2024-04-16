@@ -17,34 +17,34 @@
 
     <div v-if="searchItem">
       <table class="table table-striped table-bordered table-hover mt-2">
-      <thead>
-        <tr class="text-center">
-          <th scope="col">#</th>
-          <th scope="col">Product Name</th>
-          <th scope="col">Description</th>
-          <th scope="col">Price</th>
-          <th scope="col">More</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="(product, indx) in filteredProducts"
-          :key="product.id"
-          class="text-center"
-        >
-          <th scope="row">{{ indx + 1 }}</th>
-          <td>{{ product.name }}</td>
-          <td>{{ truncateDescription(product.description) }}</td>
-          <td>$ {{ product.price }}</td>
-          <router-link
-            :to="{ name: 'product', params: { id: product.id } }"
-            class="btn btn-secondary d-flex justify-content-center"
+        <thead>
+          <tr class="text-center">
+            <th scope="col">#</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Price</th>
+            <th scope="col">More</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(product, indx) in filteredProducts"
+            :key="product.id"
+            class="text-center"
           >
-            Details
-          </router-link>
-        </tr>
-      </tbody>
-    </table>
+            <th scope="row">{{ indx + 1 }}</th>
+            <td>{{ product.name }}</td>
+            <td>{{ truncateDescription(product.description) }}</td>
+            <td>$ {{ product.price }}</td>
+            <router-link
+              :to="{ name: 'product', params: { id: product.id } }"
+              class="btn btn-secondary d-flex justify-content-center"
+            >
+              Details
+            </router-link>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <div v-else>
@@ -77,22 +77,26 @@
           </tr>
         </tbody>
       </table>
-  
+
       <div>
         <ul class="pagination justify-content-center">
           <li class="page-item" :class="{ disabled: currentPage === 1 }">
             <button class="page-link" @click="prevPage">&laquo;</button>
           </li>
           <li class="page-item" v-for="page in totalPages" :key="page">
-            <button class="page-link" @click="goToPage(page)">{{ page }}</button>
+            <button class="page-link" @click="goToPage(page)">
+              {{ page }}
+            </button>
           </li>
-          <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+          <li
+            class="page-item"
+            :class="{ disabled: currentPage === totalPages }"
+          >
             <button class="page-link" @click="nextPage">&raquo;</button>
           </li>
         </ul>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -108,7 +112,7 @@ export default {
       searchItem: '',
       currentPage: 1,
       pageSize: 10,
-      debounce: null
+      debounce: null,
     }
   },
   mixins: [toastMixin],
@@ -141,8 +145,10 @@ export default {
   },
   methods: {
     handleSearch(e) {
+      console.log('Search event triggered')
       clearTimeout(this.debounce)
       this.debounce = setTimeout(() => {
+        console.log('Search input debounced')
         this.searchItem = e.target.value
       }, 300)
     },

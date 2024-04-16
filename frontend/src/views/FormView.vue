@@ -19,7 +19,9 @@
 
         <input type="number" class="form-control" v-model="newProduct.price" />
 
-        <button class="btn btn-success mt-4">Add Product</button>
+        <button ref="addButton" class="btn btn-success mt-4">
+          Add Product
+        </button>
       </form>
     </div>
   </div>
@@ -46,6 +48,8 @@ export default {
   methods: {
     async addProduct() {
       try {
+        this.$refs.addButton.disabled = true
+
         const authData = JSON.parse(sessionStorage.getItem('authData'))
         const token = authData.token
 
@@ -56,7 +60,7 @@ export default {
             {
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
               },
             }
           )
@@ -67,6 +71,8 @@ export default {
       } catch (error) {
         this.errorMessage('danger', error.message)
         console.error('Error creating product:', error)
+      } finally {
+        this.$refs.addButton.disabled = false
       }
     },
   },

@@ -6,7 +6,7 @@
     <h6>Published data: {{ product.created }}</h6>
 
     <div class="mt-3" v-if="isAuthenticated">
-      <button class="btn btn-danger mx-3" @click="deleteProduct">Delete</button>
+      <button ref="deleteButton" class="btn btn-danger mx-3" @click="deleteProduct">Delete</button>
       <router-link
         class="btn btn-success"
         :to="{ name: 'edit', params: { id: product.id } }"
@@ -18,6 +18,7 @@
 
 <script>
 import axios from 'axios'
+import Cookies from 'js-cookie'
 import { toastMixin } from '@/mixins/toastMixin'
 import { authMixin } from '@/mixins/authMixin'
 
@@ -35,9 +36,6 @@ export default {
   methods: {
     async getProduct() {
       try {
-        // const authData = JSON.parse(sessionStorage.getItem('authData'))
-        // const token = authData.token
-
         const response = await axios.get(
           `${process.env.VUE_APP_API_URL}/api/get-product/${this.$route.params.id}`, {
             headers: {
@@ -53,6 +51,8 @@ export default {
     },
     async deleteProduct() {
       try {
+        this.$refs.deleteButton.disabled = true
+
         const authData = JSON.parse(sessionStorage.getItem('authData'))
         const token = authData.token
         
@@ -66,6 +66,7 @@ export default {
               },
             }
           )
+          Cookies.set('productDeleted', 'true');
           this.$router.push('/')
         } catch (err) {
           console.log('err', err);
@@ -74,6 +75,8 @@ export default {
       } catch (err) {
         this.errorMessage('danger', err.message)
         console.error('Error deleting product:', err.message)
+      } finally {
+        this.$refs.deleteButton.disabled = false
       }
     },
   },
