@@ -78,8 +78,9 @@ export default {
               'authData',
               JSON.stringify({ token: access_token, email })
             )
+            this.isLoggedIn = true
             this.$router.push('/')
-            location.reload()
+            // location.reload()
           } else {
             this.authError('danger', response.data.error)
           }

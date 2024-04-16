@@ -3,7 +3,7 @@
     class="navbar navbar-expand-lg navbar-light"
     style="background-color: #e3f2fd"
   >
-    <router-link to="/" class="navbar-brand" >ProductApp</router-link>
+    <router-link to="/" class="navbar-brand">ProductApp</router-link>
     <button
       class="navbar-toggler"
       type="button"
@@ -21,7 +21,7 @@
         <li class="nav-item active">
           <router-link to="/" class="nav-link">Home</router-link>
         </li>
-        <li class="nav-item" v-if="isAuthenticated">
+        <li class="nav-item" v-if="isLoggedIn && isAuthenticated">
           <router-link to="/create" class="nav-link">Create</router-link>
         </li>
       </ul>
@@ -30,7 +30,7 @@
           class="btn btn-outline-primary my-2 mx-2 my-sm-0"
           type="submit"
           to="/login"
-          v-show="!isAuthenticated"
+          v-show="!isLoggedIn && !isAuthenticated"
         >
           Sign In
         </router-link>
@@ -38,7 +38,7 @@
           class="btn btn-outline-primary my-2 my-sm-0"
           type="submit"
           to="/auth"
-          v-show="!isAuthenticated"
+          v-show="!isLoggedIn && !isAuthenticated"
         >
           Sign Up
         </router-link>
@@ -46,7 +46,7 @@
           class="btn btn-outline-primary my-2 my-sm-0"
           type="submit"
           @click="logout"
-          v-if="isAuthenticated"
+          v-if="isLoggedIn && isAuthenticated"
         >
           Log Out
         </button>
@@ -64,8 +64,9 @@ export default {
   methods: {
     logout() {
       sessionStorage.removeItem('authData')
+      this.isLoggedIn = false
       this.$router.push('/')
-      location.reload()
+      // location.reload()
     },
   },
 }
