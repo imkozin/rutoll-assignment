@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-5">
-    <form @submit.prevent="submitLogin" class="custom-form shadow p-3 mb-5 bg-white rounded">
+    <form @submit.prevent="submitLogin" class="custom-form shadow bg-white rounded">
       <div class="text-center">
         <h1>Login</h1>
       </div>
@@ -101,7 +101,7 @@ export default {
   margin: 0 auto;
   padding: 20px;
   /* border: 1px solid #ccc; */
-  border-radius: 5px;
+  /* border-radius: 5px; */
   /* background-color: #f9f9f9; */
 }
 
