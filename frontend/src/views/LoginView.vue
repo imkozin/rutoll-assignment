@@ -34,7 +34,7 @@
         >
       </div>
       <div class="text-center">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button ref="submitBtn" type="submit" class="btn btn-primary">Submit</button>
       </div>
     </form>
   </div>
@@ -62,6 +62,7 @@ export default {
   methods: {
     async submitLogin() {
       try {
+        this.$refs.submitBtn.disabled = true
         const response = await axios.post(
           process.env.VUE_APP_API_URL + '/api/login',
           this.form,
@@ -89,6 +90,8 @@ export default {
         }
       } catch (err) {
         this.authError('danger', err.response.data.error)
+      } finally {
+        this.$refs.submitBtn.disabled = false
       }
     },
   },
