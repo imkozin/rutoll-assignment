@@ -87,7 +87,7 @@ To get started, follow these steps:
 
 - Clone the repository:
 ```
-git clone https://github.com/imkozin/vue-flask.git
+git clone https://github.com/imkozin/rutoll-assignment.git
 ```
 - Navigate to the project directory:
    - cd backend

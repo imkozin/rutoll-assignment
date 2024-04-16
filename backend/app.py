@@ -17,7 +17,7 @@ app = Flask(__name__)
 # CORS(app)
 
 CORS(app, origins='https://imkozin.github.io', methods=['GET', 'POST', 'PUT', 'DELETE'], allow_headers=['Content-Type', "Authorization"])
-# CORS(app, methods=['GET', 'POST', 'PUT', 'DELETE'], resources={r"/api/*": {"origins": "https://imkozin.github.io"}})
+
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['JWT_SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
