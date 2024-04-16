@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <div class="container mt-5 shadow p-3 mb-5 bg-white rounded">
     <form @submit.prevent="submitLogin" class="custom-form">
       <div class="text-center">
         <h1>Login</h1>
@@ -100,9 +100,9 @@ export default {
   max-width: 400px;
   margin: 0 auto;
   padding: 20px;
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
   border-radius: 5px;
-  background-color: #f9f9f9;
+  /* background-color: #f9f9f9; */
 }
 
 .form-group {
