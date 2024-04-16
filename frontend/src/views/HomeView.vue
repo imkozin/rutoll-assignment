@@ -10,6 +10,7 @@
         placeholder="Search by product name"
         aria-label="Search"
         aria-describedby="search-addon"
+        @input="handleSearch"
         v-model="searchItem"
       />
     </div>
@@ -107,6 +108,7 @@ export default {
       searchItem: '',
       currentPage: 1,
       pageSize: 10,
+      debounce: null
     }
   },
   mixins: [toastMixin],
@@ -138,6 +140,12 @@ export default {
     },
   },
   methods: {
+    handleSearch(e) {
+      clearTimeout(this.debounce)
+      this.debounce = setTimeout(() => {
+        this.searchItem = e.target.value
+      }, 300)
+    },
     async getProducts() {
       try {
         const response = await axios.get(
