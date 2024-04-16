@@ -15,8 +15,6 @@ load_dotenv()
 
 app = Flask(__name__)
 
-CORS(app)
-
 CORS(app, origins='https://imkozin.github.io', methods=['GET', 'POST', 'PUT', 'DELETE'], allow_headers=['Content-Type', "Authorization"])
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
