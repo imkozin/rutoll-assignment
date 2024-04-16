@@ -1,6 +1,6 @@
 <template>
-  <div class="container mt-5 shadow p-3 mb-5 bg-white rounded">
-    <form @submit.prevent="submitLogin" class="custom-form">
+  <div class="container mt-5">
+    <form @submit.prevent="submitLogin" class="custom-form shadow p-3 mb-5 bg-white rounded">
       <div class="text-center">
         <h1>Login</h1>
       </div>
