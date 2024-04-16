@@ -145,10 +145,8 @@ export default {
   },
   methods: {
     handleSearch(e) {
-      console.log('Search event triggered')
       clearTimeout(this.debounce)
       this.debounce = setTimeout(() => {
-        console.log('Search input debounced')
         this.searchItem = e.target.value
       }, 300)
     },
